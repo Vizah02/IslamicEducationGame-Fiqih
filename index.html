@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Sholat Hebat - Safinatun Najah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --emerald: #065f46; --gold: #d4af37; --sky: #e0f2fe; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--sky); margin: 0; overflow: hidden; user-select: none; }
+        .bg-emerald-islamic { background: linear-gradient(135deg, #065f46 0%, #064e3b 100%); }
+        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 2px solid var(--gold); border-radius: 20px; }
+        .btn-gold { background: linear-gradient(to bottom, #fde68a, #d4af37); color: #431407; box-shadow: 0 4px 0 #92400e; transition: all 0.1s; }
+        .btn-gold:active { transform: translateY(4px); box-shadow: 0 0 0 #92400e; }
+        .screen { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; z-index: 10; flex-direction: column; }
+        .active-screen { display: flex; }
+        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(to right, #10b981, #34d399); width: 0%; transition: width 0.3s; }
+        .copyright-footer { position: absolute; bottom: 12px; width: 100%; text-align: center; font-size: 10px; color: rgba(6, 95, 70, 0.6); font-weight: 600; pointer-events: none; }
+        .toggle-switch { width: 50px; height: 26px; background: #cbd5e1; border-radius: 15px; position: relative; cursor: pointer; transition: 0.3s; }
+        .toggle-switch.active { background: #10b981; }
+        .toggle-circle { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s; }
+        .toggle-switch.active .toggle-circle { left: 27px; }
+        
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--emerald); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- UI Overlay -->
+    <div id="ui-overlay" class="fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center pointer-events-none opacity-0 transition-opacity">
+        <div class="flex items-center gap-3 pointer-events-auto">
+            <div class="bg-white p-2 rounded-full border-2 border-emerald-800 shadow-lg"><i class="fas fa-star text-emerald-800"></i></div>
+            <div class="glass-panel px-3 py-1">
+                <div class="text-[10px] font-bold text-emerald-800 uppercase">Level <span id="ui-lvl">1</span></div>
+                <div class="progress-bar w-16"><div id="ui-xp-bar" class="progress-fill"></div></div>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 pointer-events-auto">
+            <div class="bg-white rounded-full px-4 py-1 border-2 border-yellow-500 flex items-center gap-2 shadow-md font-bold">
+                <i class="fas fa-coins text-yellow-500"></i><span id="ui-coins">100</span>
+            </div>
+            <button onclick="showScreen('screen-menu')" class="bg-white text-emerald-800 w-10 h-10 rounded-full border-2 border-emerald-800 shadow-lg flex items-center justify-center">
+                <i class="fas fa-home"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 1. SPLASH SCREEN -->
+    <div id="screen-splash" class="screen active-screen bg-emerald-islamic items-center justify-center text-white">
+        <div class="text-center animate-bounce">
+            <i class="fas fa-mosque text-7xl mb-4"></i>
+            <h1 class="text-3xl font-bold">AKADEMI CAHAYA</h1>
+            <p class="text-emerald-200 italic">Safinatun Najah Adventure</p>
+        </div>
+        <div class="mt-12 w-64 text-center">
+            <div class="progress-bar mb-2"><div id="loading-bar" class="progress-fill"></div></div>
+            <p class="text-[9px] mt-4 opacity-50 uppercase tracking-widest">Silvi Azizah © 2026</p>
+        </div>
+    </div>
+
+    <!-- 2. MAIN MENU -->
+    <div id="screen-menu" class="screen bg-sky-100 items-center justify-center p-6 relative">
+        <div class="w-full max-w-md space-y-4">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold text-emerald-900">MENU UTAMA</h2>
+                <div class="h-1 w-24 bg-gold mx-auto mt-2"></div>
+            </div>
+            <button onclick="showScreen('screen-story')" class="btn-gold w-full py-5 rounded-2xl text-xl font-bold flex items-center justify-center gap-4">
+                <i class="fas fa-play"></i> MULAI PETUALANGAN
+            </button>
+            <button onclick="showScreen('screen-library')" class="bg-emerald-700 text-white w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-4 shadow-lg">
+                <i class="fas fa-book-open"></i> PERPUSTAKAAN
+            </button>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="showScreen('screen-settings')" class="bg-gray-500 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2">
+                    <i class="fas fa-sliders-h"></i> PENGATURAN
+                </button>
+                <button onclick="alert('Lencana akan terbuka setelah misi selesai!')" class="bg-blue-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2">
+                    <i class="fas fa-award"></i> LENCANA
+                </button>
+            </div>
+        </div>
+        <div class="copyright-footer">© 2026 Silvi Azizah STAIMA AL-HIKAM MALANG</div>
+    </div>
+
+    <!-- 3. PERPUSTAKAAN -->
+    <div id="screen-library" class="screen bg-white relative">
+        <div class="p-6 bg-emerald-800 text-white flex items-center gap-4 sticky top-0 z-20">
+            <button onclick="showScreen('screen-menu')" class="text-white"><i class="fas fa-arrow-left text-xl"></i></button>
+            <h2 class="text-xl font-bold">Perpustakaan Kitab</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-6 space-y-6 pb-24 custom-scroll">
+            <!-- FARDHU & PEMBATAL WUDHU -->
+            <div class="glass-panel p-4 border-emerald-600">
+                <h4 class="font-bold text-emerald-800 mb-2 border-b-2 border-emerald-100 pb-1">1. Fardhu & Pembatal Wudhu</h4>
+                <p class="text-sm text-gray-700 font-semibold mb-1">Fardhu Wudhu (6):</p>
+                <p class="text-sm text-gray-600 mb-3 italic">Niat, membasuh muka, membasuh tangan sampai siku, mengusap sebagian kepala, membasuh kaki sampai mata kaki, dan tertib.</p>
+                <p class="text-sm text-gray-700 font-semibold mb-1">Pembatal Wudhu (4):</p>
+                <ul class="text-sm text-gray-600 list-disc ml-4 space-y-1">
+                    <li>Keluarnya sesuatu dari kubul/dubur.</li>
+                    <li>Hilang akal (tidur, gila, mabuk).</li>
+                    <li>Bersentuhan kulit laki-laki & perempuan yang bukan mahram tanpa penghalang.</li>
+                    <li>Menyentuh kemaluan/dubur dengan telapak tangan.</li>
+                </ul>
+            </div>
+
+            <!-- RUKUN SHOLAT -->
+            <div class="glass-panel p-4 border-emerald-600 bg-emerald-50/30">
+                <h4 class="font-bold text-emerald-800 mb-2 border-b-2 border-emerald-100 pb-1">2. Rukun Sholat</h4>
+                <p class="text-sm text-gray-600 italic mb-2">Rukun sholat ada 17 berdasarkan kitab Safinatun Najah:</p>
+                <ol class="text-sm text-gray-600 list-decimal ml-4 space-y-1">
+                    <li>Niat</li>
+                    <li>Takbiratul Ihram</li>
+                    <li>Berdiri bagi yang mampu</li>
+                    <li>Membaca Al-Fatihah</li>
+                    <li>Ruku'</li>
+                    <li>Tumakninah dalam ruku'</li>
+                    <li>I'tidal</li>
+                    <li>Tumakninah dalam i'tidal</li>
+                    <li>Sujud dua kali</li>
+                    <li>Tumakninah dalam sujud</li>
+                    <li>Duduk di antara dua sujud</li>
+                    <li>Tumakninah dalam duduk tersebut</li>
+                    <li>Tasyahud Akhir</li>
+                    <li>Duduk untuk Tasyahud Akhir</li>
+                    <li>Shalawat kepada Nabi SAW</li>
+                    <li>Salam Pertama</li>
+                    <li>Tertib</li>
+                </ol>
+            </div>
+
+            <!-- PEMBATAL SHOLAT -->
+            <div class="glass-panel p-4 border-red-600 bg-red-50/30">
+                <h4 class="font-bold text-red-800 mb-2 border-b-2 border-red-100 pb-1">3. Pembatal Sholat</h4>
+                <p class="text-sm text-gray-700 font-semibold mb-1">Hal-hal yang membatalkan sholat:</p>
+                <ul class="text-sm text-gray-600 list-disc ml-4 space-y-1">
+                    <li>Berbicara dengan sengaja (2 huruf atau lebih yang bermakna).</li>
+                    <li>Bergerak banyak (3x gerakan berturut-turut).</li>
+                    <li>Hadats besar maupun kecil.</li>
+                    <li>Terkena najis yang tidak dimaafkan.</li>
+                    <li>Terbukanya aurat secara sengaja.</li>
+                    <li>Makan atau minum meskipun sedikit.</li>
+                    <li>Berubah niat dari sholat yang sedang dilakukan.</li>
+                    <li>Murtad (keluar dari Islam).</li>
+                    <li>Membelakangi Kiblat.</li>
+                </ul>
+            </div>
+
+            <!-- SUNNAH AB'AD -->
+            <div class="glass-panel p-4 border-emerald-600">
+                <h4 class="font-bold text-emerald-800 mb-2 border-b-2 border-emerald-100 pb-1">4. Sunnah Ab'ad</h4>
+                <p class="text-sm text-gray-600 italic mb-2">Sunnah yang jika ditinggalkan dianjurkan ganti dengan Sujud Sahwi:</p>
+                <ul class="text-sm text-gray-600 list-disc ml-4 space-y-1">
+                    <li>Tasyahud awal dan duduknya.</li>
+                    <li>Membaca shalawat pada tasyahud awal.</li>
+                    <li>Doa Qunut (Subuh & Witir pertengahan Ramadhan).</li>
+                    <li>Shalawat untuk Nabi & keluarga Nabi pada Qunut.</li>
+                </ul>
+            </div>
+
+            <!-- BATAS AURAT -->
+            <div class="glass-panel p-4 border-emerald-600">
+                <h4 class="font-bold text-emerald-800 mb-2 border-b-2 border-emerald-100 pb-1">5. Batas Aurat</h4>
+                <div class="grid grid-cols-1 gap-3">
+                    <div class="bg-emerald-50 p-2 rounded-lg border-l-4 border-emerald-500">
+                        <p class="text-xs font-bold text-emerald-900">Laki-laki:</p>
+                        <p class="text-sm text-gray-600">Antara pusar sampai dengan lutut.</p>
+                    </div>
+                    <div class="bg-emerald-50 p-2 rounded-lg border-l-4 border-emerald-500">
+                        <p class="text-xs font-bold text-emerald-900">Perempuan (Dalam Sholat):</p>
+                        <p class="text-sm text-gray-600">Seluruh tubuh kecuali wajah dan telapak tangan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LARANGAN ORANG BERHADATS -->
+            <div class="glass-panel p-4 border-emerald-600">
+                <h4 class="font-bold text-emerald-800 mb-2 border-b-2 border-emerald-100 pb-1">6. Larangan Orang Berhadats</h4>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs font-bold text-blue-800 uppercase">Hadats Kecil:</p>
+                        <p class="text-sm text-gray-600">Dilarang Sholat, Thawaf, dan Menyentuh/Membawa Mushaf Al-Qur'an.</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-red-800 uppercase">Hadats Besar (Junub):</p>
+                        <p class="text-sm text-gray-600">Larangan hadats kecil ditambah: Berdiam diri di Masjid, dan Membaca Al-Qur'an (dengan niat tilawah).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-footer">© 2026 Silvi Azizah STAIMA AL-HIKAM MALANG</div>
+    </div>
+
+    <!-- 4. PENGATURAN -->
+    <div id="screen-settings" class="screen bg-gray-50 items-center justify-center p-6 relative">
+        <div class="glass-panel w-full max-w-sm p-6 space-y-6 shadow-2xl">
+            <h2 class="text-center font-bold text-emerald-900 text-xl tracking-widest uppercase">Pengaturan</h2>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center bg-white p-3 rounded-xl border">
+                    <span class="font-semibold text-gray-700"><i class="fas fa-music mr-2 text-emerald-600"></i> Musik Latar</span>
+                    <div id="toggle-music" onclick="toggleSetting('music')" class="toggle-switch active"><div class="toggle-circle"></div></div>
+                </div>
+                <div class="flex justify-between items-center bg-white p-3 rounded-xl border">
+                    <span class="font-semibold text-gray-700"><i class="fas fa-volume-up mr-2 text-emerald-600"></i> Efek Suara</span>
+                    <div id="toggle-sfx" onclick="toggleSetting('sfx')" class="toggle-switch active"><div class="toggle-circle"></div></div>
+                </div>
+            </div>
+            <button onclick="resetGame()" class="w-full py-3 bg-red-600 text-white rounded-xl font-bold shadow-lg">HAPUS DATA GAME</button>
+            <button onclick="showScreen('screen-menu')" class="w-full py-3 bg-gray-200 text-gray-700 rounded-xl font-bold">KEMBALI</button>
+            <div class="text-center text-[10px] text-gray-400 font-bold">STAIMA AL-HIKAM MALANG</div>
+        </div>
+        <div class="copyright-footer">© 2026 Silvi Azizah STAIMA AL-HIKAM MALANG</div>
+    </div>
+
+    <!-- STORY MAP -->
+    <div id="screen-story" class="screen bg-emerald-50 overflow-y-auto pb-32 relative">
+        <div class="p-6 bg-emerald-islamic text-white sticky top-0 z-30 flex items-center gap-4">
+            <button onclick="showScreen('screen-menu')" class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center"><i class="fas fa-home"></i></button>
+            <h2 class="text-xl font-bold">Peta Perjalanan</h2>
+        </div>
+        <div class="relative flex flex-col items-center py-10 gap-16" id="map-nodes">
+            <div class="absolute w-2 h-full bg-emerald-200 left-1/2 -translate-x-1/2 z-0"></div>
+        </div>
+        <div class="copyright-footer">© 2026 Silvi Azizah STAIMA AL-HIKAM MALANG</div>
+    </div>
+
+    <script>
+        let gameState = { 
+            coins: 100, xp: 0, lvl: 1, unlocked: 1,
+            settings: { music: true, sfx: true }
+        };
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById(id).classList.add('active-screen');
+            const overlay = document.getElementById('ui-overlay');
+            const noOverlay = ['screen-splash', 'screen-menu'];
+            overlay.style.opacity = noOverlay.includes(id) ? '0' : '1';
+            overlay.style.pointerEvents = noOverlay.includes(id) ? 'none' : 'auto';
+            if(id === 'screen-story') renderMap();
+        }
+
+        function toggleSetting(key) {
+            gameState.settings[key] = !gameState.settings[key];
+            const btn = document.getElementById(`toggle-${key}`);
+            btn.classList.toggle('active');
+        }
+
+        function renderMap() {
+            const container = document.getElementById('map-nodes');
+            container.innerHTML = '<div class="absolute w-2 h-full bg-emerald-200 left-1/2 -translate-x-1/2 z-0"></div>';
+            const icons = ['fa-tint', 'fa-puzzle-piece', 'fa-bolt', 'fa-layer-group', 'fa-crown'];
+            for(let i=1; i<=5; i++) {
+                const isLocked = i > gameState.unlocked;
+                const node = document.createElement('div');
+                node.className = `relative z-10 flex flex-col items-center ${isLocked ? 'opacity-50 grayscale' : 'cursor-pointer transform hover:scale-110 transition'}`;
+                node.onclick = () => !isLocked && alert(`Memulai Misi ${i}...`);
+                node.innerHTML = `
+                    <div class="w-20 h-20 bg-white border-4 ${i === 5 ? 'border-yellow-500' : 'border-emerald-600'} rounded-full flex items-center justify-center shadow-xl">
+                        <i class="fas ${icons[i-1]} text-3xl ${isLocked ? 'text-gray-400' : (i===5 ? 'text-yellow-600' : 'text-emerald-700')}"></i>
+                    </div>
+                    <div class="mt-2 glass-panel px-3 py-1 text-[10px] font-bold uppercase">MISI ${i}</div>
+                `;
+                container.appendChild(node);
+            }
+        }
+
+        function resetGame() {
+            if(confirm("Hapus semua kemajuan?")) {
+                gameState.unlocked = 1;
+                gameState.coins = 100;
+                renderMap();
+                showScreen('screen-menu');
+            }
+        }
+
+        window.onload = () => {
+            let p = 0;
+            const bar = document.getElementById('loading-bar');
+            const interval = setInterval(() => {
+                p += 4; bar.style.width = p + '%';
+                if(p >= 100) { clearInterval(interval); setTimeout(() => showScreen('screen-menu'), 500); }
+            }, 50);
+        };
+    </script>
+</body>
+</html>
